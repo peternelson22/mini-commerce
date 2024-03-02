@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JetClientState">
+    <option name="draftsState">
+      <draftsState>
+        <option name="requests">
+          <list>
+            <requestState>
+              <option name="auth">
+                <authState>
+                  <option name="bearer">
+                    <jj>
+                      <option name="token" value="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJuZWxzb24iLCJpYXQiOjE3MDkzNjcyMTAsImV4cCI6MTcwOTQ1MzYxMH0.Wym3OgdhWcYibcQd2ILYaPzV6rbGveZQE7dvwoEShDR8caVG3jNf08BRkJi1cmfl" />
+                    </jj>
+                  </option>
+                  <option name="type" value="BEARER" />
+                </authState>
+              </option>
+              <option name="body">
+                <bodyState>
+                  <option name="raw" value="{&#10;  &quot;username&quot;: &quot;nelson&quot;,&#10;  &quot;password&quot;: &quot;1234&quot;&#10;}" />
+                  <option name="type" value="JSON" />
+                </bodyState>
+              </option>
+              <option name="headers">
+                <list>
+                  <headerState>
+                    <option name="key" value="Authorization" />
+                    <option name="value" value="application/json" />
+                  </headerState>
+                  <headerState>
+                    <option name="key" value="Content-Type" />
+                    <option name="value" value="Bearer" />
+                  </headerState>
+                </list>
+              </option>
+              <option name="id" value="866abc44-c0c8-4d8f-a4e8-db01c6e90fd5" />
+              <option name="method" value="GET" />
+              <option name="name" value="Draft" />
+              <option name="url" value="http://localhost:9090/api/user/logout" />
+            </requestState>
+            <requestState>
+              <option name="auth">
+                <authState>
+                  <option name="type" value="NO_AUTH" />
+                </authState>
+              </option>
+              <option name="body">
+                <bodyState>
+                  <option name="raw" value="{&#10;  &quot;amount&quot;: 4000,&#10;  &quot;quantity&quot;: 200,&#10;  &quot;productId&quot;: 2,&#10;  &quot;paymentMode&quot;: &quot;CASH&quot;&#10;}" />
+                  <option name="type" value="JSON" />
+                </bodyState>
+              </option>
+              <option name="headers">
+                <list>
+                  <headerState>
+                    <option name="key" value="Content-Type" />
+                    <option name="value" value="application/json" />
+                  </headerState>
+                  <headerState>
+                    <option name="key" value="Authorization" />
+                    <option name="value" value="Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJuZWxzb24iLCJpYXQiOjE3MDkzMDk3NzcsImV4cCI6MTcwOTM5NjE3N30.gnLwqJ3LCgN3_qy_1XleAtpNJc4ahYD91fsbNtbZToMGB2EN2ThlOcTX_C9j0VTB" />
+                  </headerState>
+                </list>
+              </option>
+              <option name="id" value="924f2509-6233-4ed1-abb5-4e1f60d69ef0" />
+              <option name="method" value="GET" />
+              <option name="name" value="Draft 1" />
+              <option name="url" value="http://localhost:9090/api/order/1" />
+            </requestState>
+          </list>
+        </option>
+      </draftsState>
+    </option>
+    <option name="id" value="18a6875c-0853-43e4-917b-33a0c8582493" />
+  </component>
+</project>
