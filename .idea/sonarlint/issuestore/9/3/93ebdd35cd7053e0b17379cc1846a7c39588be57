@@ -1,5 +1,5 @@
 
-b	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(âÛıÍ8á˜ÃÖß1
-g	java:S112'"FDefine and throw a dedicated exception instead of using a generic one.(½åèùÿÿÿÿ8â˜ÃÖß1
+b	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(âÛıÍ8åñéôâ1
+g	java:S112'"FDefine and throw a dedicated exception instead of using a generic one.(½åèùÿÿÿÿ8èñéôâ1
 _
-java:S2094/"BRemove this empty class, write its code or make it an "interface".(Çó‚–8¶«Å°ß1
+java:S2094/"BRemove this empty class, write its code or make it an "interface".(Çó‚–8…óéôâ1

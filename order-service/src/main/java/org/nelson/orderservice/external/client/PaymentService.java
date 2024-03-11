@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PaymentService {
 
     @PostMapping
-    ResponseEntity<String> doPayment(@RequestBody PaymentRequest paymentRequest);
+    ResponseEntity<Long> doPayment(@RequestBody PaymentRequest paymentRequest);
 
     default void fallback(){
         throw new OrderApiException("Payment service unavailable", "SERVICE_UNAVAILABLE", 500);

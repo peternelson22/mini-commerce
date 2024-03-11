@@ -1,0 +1,219 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > OrderServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.nelson.orderservice.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: OrderServiceImpl (org.nelson.orderservice.service.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrderServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.4%
+  </span>
+  <span class="absValue">
+    (31/58)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.nelson.orderservice.service.impl;
+&nbsp;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.nelson.orderservice.dto.OrderRequest;
+&nbsp;import org.nelson.orderservice.dto.OrderResponse;
+&nbsp;import org.nelson.orderservice.dto.ProductResponse;
+&nbsp;import org.nelson.orderservice.entity.Order;
+&nbsp;import org.nelson.orderservice.exception.OrderApiException;
+&nbsp;import org.nelson.orderservice.external.client.PaymentService;
+&nbsp;import org.nelson.orderservice.external.client.ProductService;
+&nbsp;import org.nelson.orderservice.external.request.PaymentRequest;
+&nbsp;import org.nelson.orderservice.external.response.PaymentResponse;
+&nbsp;import org.nelson.orderservice.repository.OrderRepository;
+&nbsp;import org.nelson.orderservice.service.OrderService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;import java.time.Instant;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+<b class="fc">&nbsp;public class OrderServiceImpl implements OrderService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private OrderRepository orderRepository;
+&nbsp;    @Autowired
+&nbsp;    private ProductService productService;
+&nbsp;    @Autowired
+&nbsp;    private PaymentService paymentService;
+&nbsp;    @Autowired
+&nbsp;    private RestTemplate restTemplate;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public long createOrder(OrderRequest orderRequest) {
+<b class="nc">&nbsp;        log.info(&quot;Placing order {}:&quot;, orderRequest.getProductId());</b>
+&nbsp;
+<b class="nc">&nbsp;        productService.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());</b>
+&nbsp;
+<b class="nc">&nbsp;        Order order = Order.builder()</b>
+<b class="nc">&nbsp;                .amount(orderRequest.getAmount())</b>
+<b class="nc">&nbsp;                .orderStatus(&quot;CREATED&quot;)</b>
+<b class="nc">&nbsp;                .orderDate(Instant.now())</b>
+<b class="nc">&nbsp;                .quantity(orderRequest.getQuantity())</b>
+<b class="nc">&nbsp;                .productId(orderRequest.getProductId())</b>
+<b class="nc">&nbsp;                .build();</b>
+<b class="nc">&nbsp;        orderRepository.save(order);</b>
+<b class="nc">&nbsp;        log.info(&quot;Order placed successfully&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        PaymentRequest paymentRequest = PaymentRequest.builder()</b>
+<b class="nc">&nbsp;                .orderId(order.getId())</b>
+<b class="nc">&nbsp;                .paymentMode(orderRequest.getPaymentMode())</b>
+<b class="nc">&nbsp;                .amount(orderRequest.getAmount())</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        String orderStatus = null;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            paymentService.doPayment(paymentRequest);</b>
+<b class="nc">&nbsp;            log.info(&quot;Payment done successfully&quot;);</b>
+<b class="nc">&nbsp;            orderStatus = &quot;PLACED&quot;;</b>
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            log.error(&quot;Error occurred when trying to make payments&quot;);</b>
+<b class="nc">&nbsp;            orderStatus = &quot;PAYMENT_FAILED&quot;;</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        order.setOrderStatus(orderStatus);</b>
+<b class="nc">&nbsp;        orderRepository.save(order);</b>
+<b class="nc">&nbsp;        return order.getId();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public OrderResponse getOrderDetails(long orderId) {
+<b class="fc">&nbsp;        log.info(&quot;Getting order detail for {}&quot;, orderId);</b>
+<b class="fc">&nbsp;        Order order = orderRepository.findById(orderId).orElseThrow(() -&gt;</b>
+<b class="fc">&nbsp;                new  OrderApiException(&quot;Order not found for orderId &quot; + orderId, &quot;NOT_FOUND&quot;, 404 ));</b>
+&nbsp;
+<b class="fc">&nbsp;        log.info(&quot;Invoking product service to get product with id {}&quot;, order.getProductId());</b>
+&nbsp;
+<b class="fc">&nbsp;       ProductResponse productResponse = restTemplate.getForObject(&quot;http://PRODUCT-SERVICE/api/product/&quot; + order.getProductId(),</b>
+&nbsp;                ProductResponse.class);
+&nbsp;
+<b class="fc">&nbsp;       log.info(&quot;Getting payment info from Payment Service&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;       PaymentResponse paymentResponse = restTemplate.getForObject(&quot;http://PAYMENT-SERVICE/api/payment/&quot; + order.getId(),</b>
+&nbsp;                PaymentResponse.class);
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;       OrderResponse.PaymentDetails paymentDetails = OrderResponse.PaymentDetails.builder()</b>
+<b class="fc">&nbsp;                .paymentId(paymentResponse.getPaymentId())</b>
+<b class="fc">&nbsp;                .paymentDate(paymentResponse.getPaymentDate())</b>
+<b class="fc">&nbsp;                .status(paymentResponse.getStatus())</b>
+<b class="fc">&nbsp;                .paymentMode(paymentResponse.getPaymentMode())</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        OrderResponse.ProductDetails  productDetails = null;</b>
+<b class="fc">&nbsp;        if (productResponse != null) {</b>
+<b class="fc">&nbsp;            productDetails = OrderResponse.ProductDetails.builder()</b>
+<b class="fc">&nbsp;                   .name(productResponse.getName())</b>
+<b class="fc">&nbsp;                   .quantity(productResponse.getQuantity())</b>
+<b class="fc">&nbsp;                   .price(productResponse.getPrice())</b>
+<b class="fc">&nbsp;                   .id(productResponse.getId())</b>
+<b class="fc">&nbsp;                   .build();</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return OrderResponse.builder()</b>
+<b class="fc">&nbsp;                .orderId(order.getId())</b>
+<b class="fc">&nbsp;                .orderStatus(order.getOrderStatus())</b>
+<b class="fc">&nbsp;                .amount(order.getAmount())</b>
+<b class="fc">&nbsp;                .orderDate(order.getOrderDate())</b>
+<b class="fc">&nbsp;                .productDetails(productDetails)</b>
+<b class="fc">&nbsp;                .paymentDetails(paymentDetails)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-03-03 09:13</div>
+</div>
+</body>
+</html>

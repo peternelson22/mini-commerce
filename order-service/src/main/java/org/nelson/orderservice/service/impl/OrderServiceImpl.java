@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 
+import static org.nelson.orderservice.dto.OrderResponse.*;
+
 @Service
 @Slf4j
 public class OrderServiceImpl implements OrderService {
@@ -85,7 +87,8 @@ public class OrderServiceImpl implements OrderService {
                 PaymentResponse.class);
 
 
-       OrderResponse.PaymentDetails paymentDetails = OrderResponse.PaymentDetails.builder()
+        assert paymentResponse != null;
+        PaymentDetails paymentDetails = PaymentDetails.builder()
                 .paymentId(paymentResponse.getPaymentId())
                 .paymentDate(paymentResponse.getPaymentDate())
                 .status(paymentResponse.getStatus())
@@ -93,9 +96,9 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
 
-        OrderResponse.ProductDetails  productDetails = null;
+        ProductDetails  productDetails = null;
         if (productResponse != null) {
-            productDetails = OrderResponse.ProductDetails.builder()
+            productDetails = ProductDetails.builder()
                    .name(productResponse.getName())
                    .quantity(productResponse.getQuantity())
                    .price(productResponse.getPrice())
@@ -103,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
                    .build();
         }
 
-        return OrderResponse.builder()
+        return builder()
                 .orderId(order.getId())
                 .orderStatus(order.getOrderStatus())
                 .amount(order.getAmount())

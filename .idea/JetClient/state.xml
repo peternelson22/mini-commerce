@@ -30,7 +30,7 @@
                   </headerState>
                   <headerState>
                     <option name="key" value="Content-Type" />
-                    <option name="value" value="Bearer" />
+                    <option name="value" value="application/json" />
                   </headerState>
                 </list>
               </option>
